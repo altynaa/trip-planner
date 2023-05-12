@@ -1,0 +1,30 @@
+@use "../var/colors" as *;
+
+.header {
+  padding-top: 20px;
+  .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    .main-title {
+      font-size: 36px;
+      width: 190px;
+      color: $black;
+    }
+    .main-nav {
+      &_list {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        list-style: none;
+      }
+      &_item {
+        font-size: 20px;
+        font-weight: bold;
+        color: $black;
+        margin-right: 1rem;
+      }
+    }
+  }
+
+}
