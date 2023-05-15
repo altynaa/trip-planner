@@ -1,11 +1,14 @@
-export default function Home() {
+import React, {PropsWithChildren} from "react";
+
+const Home: React.FC<PropsWithChildren> = ({children}) => {
+
   return (
     <>
-     <main>
-       <div className="main-block">
-         something
-       </div>
-     </main>
+      <main>
+      </main>
+      {children}
     </>
   )
 }
+
+export default Home;

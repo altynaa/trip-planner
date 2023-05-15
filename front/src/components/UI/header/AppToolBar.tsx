@@ -1,7 +1,13 @@
 import React from "react";
 import Link from "next/link";
+import { useAppSelector } from "@/app/hooks";
+import { selectUser } from "@/features/users/usersSlice";
+import UsersMenu from "@/components/UI/header/UsersMenu";
+import AnonymousMenu from "@/components/UI/header/AnonymousMenu";
 
 const AppToolBar = () => {
+  const user = useAppSelector(selectUser);
+
   return (
     <>
       <header className="header">
@@ -25,6 +31,7 @@ const AppToolBar = () => {
               </li>
             </ul>
           </nav>
+          {user ? <UsersMenu/> : <AnonymousMenu/> }
         </div>
       </header>
     </>
