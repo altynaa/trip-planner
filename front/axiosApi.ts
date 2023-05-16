@@ -5,6 +5,7 @@ import {Store} from '@reduxjs/toolkit';
 
 const axiosApi = axios.create({baseURL: apiURL,});
 
+
 export const addInterceptors = (store: Store<RootState>) => {
   axiosApi.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     const token = store.getState().users.user?.token;

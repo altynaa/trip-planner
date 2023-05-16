@@ -41,3 +41,10 @@ export interface User {
   email: string;
   googleId?: string;
 }
+
+export interface Country {
+  [key: string]: {
+    name: string;
+    capital: string;
+  }
+}
