@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Trip } from '../entities/trip.entity';
 import { Repository } from 'typeorm';
@@ -24,5 +24,17 @@ export class TripsController {
       finishesAt: body.finishesAt,
     });
     return this.tripRepository.save(trip);
+  }
+
+  @Get()
+  @UseGuards(TokenAuthGuard)
+  async getAll(@CurrentUser() user: User): Promise<Trip[]> {
+    const userId = user.id;
+    return this.tripRepository
+      .createQueryBuilder('trip')
+      .leftJoinAndSelect('trip.tourist', 'tourist')
+      .select(['trip', 'tourist.id', 'tourist.firstName', 'tourist.lastName'])
+      .where('tourist = :userId', { userId })
+      .getMany();
   }
 }
