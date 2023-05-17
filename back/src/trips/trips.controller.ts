@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Trip } from '../entities/trip.entity';
 import { Repository } from 'typeorm';
@@ -36,5 +45,19 @@ export class TripsController {
       .select(['trip', 'tourist.id', 'tourist.firstName', 'tourist.lastName'])
       .where('tourist = :userId', { userId })
       .getMany();
+  }
+
+  @Delete(':id')
+  @UseGuards(TokenAuthGuard)
+  async removeTrip(@Param('id') id: number) {
+    const trip: Trip = await this.tripRepository.findOne({
+      where: { id },
+    });
+
+    if (trip) {
+      return this.tripRepository.delete(id);
+    } else {
+      throw new NotFoundException(`Trip with id ${id} not found`);
+    }
   }
 }
