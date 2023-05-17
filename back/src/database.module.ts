@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmCoreModule } from '@nestjs/typeorm/dist/typeorm-core.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './entities/user.entity';
+import { Trip } from './entities/trip.entity';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { User } from './entities/user.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [User],
+        entities: [User, Trip],
         synchronize: true,
       }),
     }),
