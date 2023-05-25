@@ -1,18 +1,24 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { COUNTRY_API } from "../../../constants";
-import { Country } from "../../../types";
+import { CountriesResponse, Country, CountryNameToSend } from "../../../types";
 
 export const fetchCountries = createAsyncThunk<Country[]>(
   "countries/getAll",
   async () => {
-    const response = await axios.get<Country[]>(`https://countryapi.io/api/all?apikey=${COUNTRY_API}`);
-    const countries = Object.values(response.data);
-    return countries.map(country => {
+    const response = await axios.get(`https://countriesnow.space/api/v0.1/countries`);
+    const countries: CountriesResponse[] = response.data.data;
+    return countries.map(obj => {
       return {
-        name: country.name,
-        capital: country.capital
+        name: obj.country,
       }
     });
+  }
+);
+
+export const fetchCitiesOfCountry = createAsyncThunk<string[], CountryNameToSend>(
+  'countries/getSpecificCities',
+  async (countryName) => {
+    const response = await axios.post('https://countriesnow.space/api/v0.1/countries/cities', countryName);
+    return response.data.data;
   }
 );

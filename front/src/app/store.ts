@@ -12,10 +12,12 @@ import {
 import storage from 'redux-persist/lib/storage';
 import { usersReducer } from "@/features/users/usersSlice";
 import { countriesReducer } from "@/features/countries/countriesSlice";
+import { tripsReducer } from "@/features/trips/tripsSlice";
 
 const rootReducer = combineReducers({
   users: usersReducer,
   countries: countriesReducer,
+  trips: tripsReducer,
 });
 
 const persistConfig = {

@@ -43,8 +43,41 @@ export interface User {
 }
 
 export interface Country {
-  [key: string]: {
     name: string;
-    capital: string;
-  }
+}
+
+export interface CountryNameToSend {
+  country: string
+}
+
+export interface CountriesResponse {
+  iso2: string;
+  iso3: string;
+  country: string;
+  cities: string[];
+}
+export interface Destination {
+  country: string;
+  city: string;
+}
+
+export interface TripMutation {
+  country: string;
+  city: string;
+  itinerary: Destination[];
+  startsAt: Date | null
+  finishesAt: Date | null
+}
+
+export interface TripApi {
+  itinerary: Destination[];
+  startsAt: Date | null
+  finishesAt: Date | null
+}
+export interface Trip {
+  id: number;
+  country: string;
+  itinerary: string;
+  startsAt: Date | null
+  finishesAt: Date | null
 }
