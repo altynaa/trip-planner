@@ -1,20 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchCitiesOfCountry, fetchCountries } from "@/features/countries/countriesThunks";
+import { fetchCountriesAndCities } from "@/features/countries/countriesThunks";
 import { RootState } from "@/app/store";
-import { Country } from "../../../types";
+import { CountryAndCity } from "../../../types";
 
 interface CountriesState {
-  countries: Country[],
-  countriesLoading: boolean,
-  citiesLoading: boolean,
-  cities: string[]
+  countriesAndCities: CountryAndCity[],
+  countriesAndCitiesLoading: boolean,
 }
 
 const initialState: CountriesState = {
-  countries: [],
-  countriesLoading: false,
-  citiesLoading: false,
-  cities: []
+  countriesAndCities: [],
+  countriesAndCitiesLoading: false
 };
 
 const countriesSlice = createSlice({
@@ -22,32 +18,21 @@ const countriesSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchCountries.pending, (state) => {
-      state.countriesLoading = true;
+    builder.addCase(fetchCountriesAndCities.pending, (state) => {
+      state.countriesAndCitiesLoading = true;
     });
-    builder.addCase(fetchCountries.fulfilled, (state, {payload: country}) => {
-      state.countriesLoading = false;
-      state.countries = country;
+    builder.addCase(fetchCountriesAndCities.fulfilled, (state, {payload: countryData}) => {
+     state.countriesAndCitiesLoading = false;
+     state.countriesAndCities = countryData;
     });
-    builder.addCase(fetchCountries.rejected, (state) => {
-      state.countriesLoading = false;
-    });
-
-    builder.addCase(fetchCitiesOfCountry.pending, (state) => {
-      state.citiesLoading = true;
-    });
-    builder.addCase(fetchCitiesOfCountry.fulfilled, (state, {payload: cities}) => {
-      state.citiesLoading = false;
-      state.cities = cities;
-    });
-    builder.addCase(fetchCitiesOfCountry.rejected, (state) => {
-      state.citiesLoading = false;
+    builder.addCase(fetchCountriesAndCities.rejected, (state) => {
+      state.countriesAndCitiesLoading = false;
     });
   }
 });
 
 export const countriesReducer = countriesSlice.reducer;
 
-export const selectCountries = (state: RootState) => state.countries.countries;
-export const selectCities = (state: RootState) => state.countries.cities;
+export const selectCountriesAndCities = (state: RootState) => state.countries.countriesAndCities;
+export const selectCountriesAndCitiesLoading = (state: RootState) => state.countries.countriesAndCitiesLoading;
 

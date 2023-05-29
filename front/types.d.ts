@@ -42,13 +42,6 @@ export interface User {
   googleId?: string;
 }
 
-export interface Country {
-    name: string;
-}
-
-export interface CountryNameToSend {
-  country: string
-}
 
 export interface CountriesResponse {
   iso2: string;
@@ -61,23 +54,27 @@ export interface Destination {
   city: string;
 }
 
-export interface TripMutation {
-  country: string;
-  city: string;
-  itinerary: Destination[];
-  startsAt: Date | null
-  finishesAt: Date | null
-}
-
 export interface TripApi {
   itinerary: Destination[];
   startsAt: Date | null
   finishesAt: Date | null
 }
+
 export interface Trip {
   id: number;
   country: string;
   itinerary: string;
   startsAt: Date | null
+  finishesAt: Date | null
+}
+
+
+export interface CountryAndCity {
+  country: string;
+  cities: string[]
+}
+
+export interface TripDate {
+  startsAt: Date | null;
   finishesAt: Date | null
 }

@@ -1,6 +1,7 @@
 import { Trip, ValidationError } from "../../../types";
 import { createSlice } from "@reduxjs/toolkit";
 import { addTrip, fetchTrips } from "@/features/trips/tripsThunks";
+import { RootState } from "@/app/store";
 
 interface TripsState {
   trips: Trip[];
@@ -47,3 +48,5 @@ const tripsSlice = createSlice({
 });
 
 export const tripsReducer = tripsSlice.reducer;
+
+export const selectTripAdding = (state: RootState) => state.trips.tripAdding;
