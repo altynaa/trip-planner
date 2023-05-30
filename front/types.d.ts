@@ -56,25 +56,27 @@ export interface Destination {
 
 export interface TripApi {
   itinerary: Destination[];
-  startsAt: Date | null
-  finishesAt: Date | null
+  startsAt: Date | null;
+  finishesAt: Date | null;
+  flightBooking: File | null;
 }
 
 export interface Trip {
   id: number;
   country: string;
   itinerary: string;
-  startsAt: Date | null
-  finishesAt: Date | null
+  startsAt: Date | null;
+  finishesAt: Date | null;
 }
 
 
 export interface CountryAndCity {
   country: string;
-  cities: string[]
+  cities: string[];
 }
 
-export interface TripDate {
+export interface TripData {
   startsAt: Date | null;
-  finishesAt: Date | null
+  finishesAt: Date | null;
+  flightBooking: File | null;
 }

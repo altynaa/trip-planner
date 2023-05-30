@@ -4,7 +4,8 @@ import { selectCountriesAndCities } from "@/features/countries/countriesSlice";
 import { fetchCountriesAndCities } from "@/features/countries/countriesThunks";
 import { addTrip } from "@/features/trips/tripsThunks";
 import { selectTripAdding } from "@/features/trips/tripsSlice";
-import { Destination, TripDate } from "../../../../types";
+import FileInput from "@/components/UI/fileInput/FileInput";
+import { Destination, TripData } from "../../../../types";
 import { Grid, Typography, Button, CircularProgress } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -14,7 +15,11 @@ const TripForm = () => {
   const countriesAndCities = useAppSelector(selectCountriesAndCities);
   const adding = useAppSelector(selectTripAdding);
   const [trips, setTrips] = useState<Destination[]>([{ country: "", city: "" }]);
-  const [date, setDate] = useState<TripDate>({ startsAt: null, finishesAt: null });
+  const [tripData, setTripData] = useState<TripData>({
+    startsAt: null,
+    finishesAt: null,
+    flightBooking: null
+  });
 
 
   useEffect(() => {
@@ -33,18 +38,26 @@ const TripForm = () => {
   };
 
   const handleStartDateChange = (date: Date | null) => {
-    setDate((prevDate) => ({
+    setTripData((prevDate) => ({
       ...prevDate,
       startsAt: date
     }));
   };
 
   const handleEndDateChange = (date: Date | null) => {
-    setDate((prevDate) => ({
+    setTripData((prevDate) => ({
       ...prevDate,
       finishesAt: date
     }));
   };
+
+  const inputFileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {name, files} = e.target;
+    setTripData(prev => ({
+      ...prev, [name]: files && files[0] ? files[0] : null,
+    }));
+  };
+
 
   const handleAddRow = () => {
     setTrips(prevTrips => [...prevTrips, { country: "", city: "" }]);
@@ -62,12 +75,14 @@ const TripForm = () => {
     }
   };
 
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const trip = {
       itinerary: trips,
-      startsAt: date.startsAt,
-      finishesAt: date.finishesAt
+      startsAt: tripData.startsAt,
+      finishesAt: tripData.finishesAt,
+      flightBooking: tripData.flightBooking
     };
     await dispatch(addTrip(trip));
   };
@@ -153,6 +168,13 @@ const TripForm = () => {
                   </select>
                 </Grid>
                 <Grid item xs={12} sm={4}>
+                  <FileInput
+                    onChange={inputFileChangeHandler}
+                    name="flightBooking"
+                    label="Flight Booking"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
                   <Button
                     type="button"
                     disabled={trips.length === 1}
@@ -169,7 +191,7 @@ const TripForm = () => {
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
                 label="Trip start date"
-                value={date.startsAt}
+                value={tripData.startsAt}
                 onChange={handleStartDateChange}
                 sx={{ width: 350 }}
               />
@@ -179,7 +201,7 @@ const TripForm = () => {
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
                 label="Trip end date"
-                value={date.finishesAt}
+                value={tripData.finishesAt}
                 onChange={handleEndDateChange}
                 sx={{ width: 350 }}
               />
@@ -189,7 +211,7 @@ const TripForm = () => {
 
           <Grid item xs={12}>
             <Button
-              disabled={adding || trips.some(trip => !trip.country || !trip.city) || !date.startsAt || !date.finishesAt}
+              disabled={adding || trips.some(trip => !trip.country || !trip.city) || !tripData.startsAt || !tripData.finishesAt}
               type="submit"
             >
               {adding && <CircularProgress />}
