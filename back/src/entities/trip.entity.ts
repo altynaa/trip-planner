@@ -24,4 +24,7 @@ export class Trip {
 
   @Column()
   finishesAt: Date;
+
+  @Column({ nullable: true })
+  flightBooking: string | null;
 }

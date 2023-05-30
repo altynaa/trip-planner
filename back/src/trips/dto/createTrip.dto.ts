@@ -1,9 +1,6 @@
 import { IsDateString, IsNotEmpty } from 'class-validator';
 
 export class CreateTripDto {
-  // @IsNotEmpty()
-  // tourist: number;
-
   @IsNotEmpty()
   itinerary: string;
 

@@ -6,7 +6,9 @@ import {
   NotFoundException,
   Param,
   Post,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Trip } from '../entities/trip.entity';
@@ -15,6 +17,7 @@ import { CreateTripDto } from './dto/createTrip.dto';
 import { TokenAuthGuard } from '../auth/token-auth.guard';
 import { CurrentUser } from '../auth/currentUser.decorator';
 import { User } from '../entities/user.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('trips')
 export class TripsController {
@@ -25,12 +28,20 @@ export class TripsController {
 
   @Post()
   @UseGuards(TokenAuthGuard)
-  async createTrip(@CurrentUser() user: User, @Body() body: CreateTripDto) {
+  @UseInterceptors(
+    FileInterceptor('flightBooking', { dest: './public/uploads/trip/file' }),
+  )
+  async createTrip(
+    @UploadedFile() file: Express.Multer.File,
+    @CurrentUser() user: User,
+    @Body() body: CreateTripDto,
+  ) {
     const trip = this.tripRepository.create({
       tourist: user,
       itinerary: body.itinerary,
       startsAt: body.startsAt,
       finishesAt: body.finishesAt,
+      flightBooking: file ? '/uploads/trip/file/' + file.filename : null,
     });
     return this.tripRepository.save(trip);
   }
