@@ -1,6 +1,6 @@
 import { Trip, ValidationError } from "../../../types";
 import { createSlice } from "@reduxjs/toolkit";
-import { addTrip, fetchTrips } from "@/features/trips/tripsThunks";
+import { addTrip, deleteTrip, fetchTrips } from "@/features/trips/tripsThunks";
 import { RootState } from "@/app/store";
 
 interface TripsState {
@@ -8,6 +8,7 @@ interface TripsState {
   tripsLoading: boolean;
   tripAdding: boolean;
   tripAddError: ValidationError | null;
+  tripDeleting: boolean;
 }
 
 const initialState: TripsState = {
@@ -15,6 +16,7 @@ const initialState: TripsState = {
   tripsLoading: false,
   tripAdding: false,
   tripAddError: null,
+  tripDeleting: false,
 };
 
 const tripsSlice = createSlice({
@@ -44,6 +46,16 @@ const tripsSlice = createSlice({
       state.tripAdding = false;
       state.tripAddError = error || null;
     });
+
+    builder.addCase(deleteTrip.pending, (state) => {
+      state.tripDeleting = true;
+    });
+    builder.addCase(deleteTrip.fulfilled, (state) => {
+      state.tripDeleting = false;
+    });
+    builder.addCase(deleteTrip.rejected, (state) => {
+      state.tripDeleting = false;
+    });
   }
 });
 
@@ -52,3 +64,4 @@ export const tripsReducer = tripsSlice.reducer;
 export const selectTripAdding = (state: RootState) => state.trips.tripAdding;
 export const selectTrips = (state: RootState) => state.trips.trips;
 export const selectTripsLoading = (state: RootState) => state.trips.tripsLoading;
+export const selectTripDeleting = (state: RootState) => state.trips.tripDeleting;

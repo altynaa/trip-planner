@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { fetchTrips } from "@/features/trips/tripsThunks";
-import { selectTrips, selectTripsLoading } from "@/features/trips/tripsSlice";
+import { deleteTrip, fetchTrips } from "@/features/trips/tripsThunks";
+import { selectTripDeleting, selectTrips, selectTripsLoading } from "@/features/trips/tripsSlice";
 import { selectUser } from "@/features/users/usersSlice";
 import {
   Box, Button,
@@ -22,12 +22,18 @@ const MyTrips = () => {
   const trips = useAppSelector(selectTrips);
   const tripsLoading = useAppSelector(selectTripsLoading);
   const user = useAppSelector(selectUser);
+  const deleting = useAppSelector(selectTripDeleting);
 
   useEffect(() => {
     dispatch(fetchTrips());
   }, [dispatch]);
 
   console.log(trips);
+
+  const handleDelete = async (tripId: string) => {
+    await dispatch(deleteTrip(tripId));
+    await dispatch(fetchTrips());
+  };
 
   return (
     <Grid container direction="column" spacing={2}>
@@ -78,9 +84,15 @@ const MyTrips = () => {
                     </TableCell>
                     {user &&
                       <TableCell align="center">
-                        <Button
+                        <Button variant="contained"
+                                onClick={() => handleDelete(trip.id.toString())}
+                                disabled={deleting}
                         >
-                          <DeleteIcon/>
+                          {deleting ?
+                            <Box sx={{display: "flex"}}>
+                              <CircularProgress/>
+                            </Box> : <DeleteIcon/>
+                          }
                         </Button>
                       </TableCell>
                     }

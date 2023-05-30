@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { Trip, TripApi, ValidationError } from "../../../types";
+import { GlobalError, Trip, TripApi, ValidationError } from "../../../types";
 import axiosApi from "../../../axiosApi";
 import { isAxiosError } from "axios";
 
@@ -46,6 +46,20 @@ export const addTrip = createAsyncThunk<void, TripApi, { rejectValue: Validation
         return rejectWithValue(e.response.data as ValidationError);
       }
       throw e;
+    }
+  }
+);
+
+export const deleteTrip = createAsyncThunk<void, string>(
+  'trips/delete',
+  async (id) => {
+    try {
+      await axiosApi.delete('/trips/' + id);
+    } catch (e) {
+      if (isAxiosError(e) && e.response && e.response.status === 403) {
+        return alert(e.response.data.error as GlobalError);
+      }
+      throw (e);
     }
   }
 );
