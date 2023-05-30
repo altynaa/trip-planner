@@ -48,14 +48,19 @@ export class TripsController {
 
   @Get()
   @UseGuards(TokenAuthGuard)
-  async getAll(@CurrentUser() user: User): Promise<Trip[]> {
+  async getAll(@CurrentUser() user: User) {
     const userId = user.id;
-    return this.tripRepository
+    const trips = await this.tripRepository
       .createQueryBuilder('trip')
       .leftJoinAndSelect('trip.tourist', 'tourist')
       .select(['trip', 'tourist.id', 'tourist.firstName', 'tourist.lastName'])
       .where('tourist = :userId', { userId })
       .getMany();
+
+    return trips.map((trip) => ({
+      ...trip,
+      itinerary: Array.from(JSON.parse(trip.itinerary)),
+    }));
   }
 
   @Delete(':id')
