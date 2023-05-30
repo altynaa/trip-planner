@@ -60,6 +60,9 @@ export class TripsController {
     return trips.map((trip) => ({
       ...trip,
       itinerary: Array.from(JSON.parse(trip.itinerary)),
+      flightBooking: trip.flightBooking
+        ? `http://localhost:8000${trip.flightBooking}`
+        : null,
     }));
   }
 

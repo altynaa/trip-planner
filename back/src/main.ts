@@ -5,13 +5,15 @@ import {
   ValidationError,
   ValidationPipe,
 } from '@nestjs/common';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 interface ValidationErrors {
   [key: string]: string[];
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -32,10 +34,12 @@ async function bootstrap() {
     }),
   );
 
+  app.useStaticAssets(join(__dirname, '..', 'public'));
+
   app.enableCors({
     origin: 'http://localhost:3000',
   });
 
-  await app.listen(8001);
+  await app.listen(8000);
 }
 bootstrap();
