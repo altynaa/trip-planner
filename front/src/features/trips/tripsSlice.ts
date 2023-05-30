@@ -50,3 +50,5 @@ const tripsSlice = createSlice({
 export const tripsReducer = tripsSlice.reducer;
 
 export const selectTripAdding = (state: RootState) => state.trips.tripAdding;
+export const selectTrips = (state: RootState) => state.trips.trips;
+export const selectTripsLoading = (state: RootState) => state.trips.tripsLoading;

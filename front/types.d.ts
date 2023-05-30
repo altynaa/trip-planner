@@ -63,10 +63,10 @@ export interface TripApi {
 
 export interface Trip {
   id: number;
-  country: string;
-  itinerary: string;
-  startsAt: Date | null;
-  finishesAt: Date | null;
+  itinerary: Destination[];
+  startsAt: Date;
+  finishesAt: Date;
+  flightBooking: string;
 }
 
 
