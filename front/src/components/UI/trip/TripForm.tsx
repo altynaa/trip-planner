@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { selectCountriesAndCities } from "@/features/countries/countriesSlice";
 import { fetchCountriesAndCities } from "@/features/countries/countriesThunks";
-import { addTrip } from "@/features/trips/tripsThunks";
+import { addTrip, fetchCoordinatesOfCities } from "@/features/trips/tripsThunks";
 import { selectTripAdding } from "@/features/trips/tripsSlice";
 import FileInput from "@/components/UI/fileInput/FileInput";
 import { Destination, TripData } from "../../../../types";
@@ -15,26 +15,27 @@ const TripForm = () => {
   const countriesAndCities = useAppSelector(selectCountriesAndCities);
   const adding = useAppSelector(selectTripAdding);
   const [trips, setTrips] = useState<Destination[]>([{ country: "", city: "" }]);
+  const lastTrip = trips.length - 1;
   const [tripData, setTripData] = useState<TripData>({
     startsAt: null,
     finishesAt: null,
     flightBooking: null
   });
 
-
   useEffect(() => {
     dispatch(fetchCountriesAndCities());
-  }, [dispatch, trips]);
+    dispatch(fetchCoordinatesOfCities(trips[lastTrip].city));
+  }, [dispatch, trips, lastTrip]);
 
 
-  const inputChangeHandler = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const inputChangeHandler = async (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     const updatedTrips = [...trips];
     updatedTrips[index] = {
       ...updatedTrips[index],
       [name]: value
     };
-    setTrips(updatedTrips);
+    await setTrips(updatedTrips);
   };
 
   const handleStartDateChange = (date: Date | null) => {
@@ -52,9 +53,9 @@ const TripForm = () => {
   };
 
   const inputFileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, files} = e.target;
+    const { name, files } = e.target;
     setTripData(prev => ({
-      ...prev, [name]: files && files[0] ? files[0] : null,
+      ...prev, [name]: files && files[0] ? files[0] : null
     }));
   };
 
@@ -85,6 +86,7 @@ const TripForm = () => {
       flightBooking: tripData.flightBooking
     };
     await dispatch(addTrip(trip));
+    setTrips([{ country: "", city: "" }]);
   };
 
   return (
@@ -103,7 +105,7 @@ const TripForm = () => {
           {trips.map((trip, index) => (
             <Grid item xs={12} key={index}>
               <Grid container direction="row" spacing={2}>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12}>
                   <label
                     htmlFor={`country${index}`}
                     className="mb-2"
@@ -133,7 +135,7 @@ const TripForm = () => {
                     ))}
                   </select>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12}>
                   <label
                     htmlFor={`city${index}`}
                     className="mb-2"
@@ -167,14 +169,8 @@ const TripForm = () => {
                     })}
                   </select>
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <FileInput
-                    onChange={inputFileChangeHandler}
-                    name="flightBooking"
-                    label="Flight Booking"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
+
+                <Grid item xs={12}>
                   <Button
                     type="button"
                     disabled={trips.length === 1}
@@ -186,6 +182,13 @@ const TripForm = () => {
               </Grid>
             </Grid>
           ))}
+          <Grid item xs={12}>
+            <FileInput
+              onChange={inputFileChangeHandler}
+              name="flightBooking"
+              label="Flight Booking"
+            />
+          </Grid>
 
           <Grid item xs={12}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -207,8 +210,6 @@ const TripForm = () => {
               />
             </LocalizationProvider>
           </Grid>
-
-
           <Grid item xs={12}>
             <Button
               disabled={adding || trips.some(trip => !trip.country || !trip.city) || !tripData.startsAt || !tripData.finishesAt}

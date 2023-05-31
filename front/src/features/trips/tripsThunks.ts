@@ -1,7 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { GlobalError, Trip, TripApi, ValidationError } from "../../../types";
+import { Coordinates, GlobalError, Trip, TripApi, ValidationError } from "../../../types";
 import axiosApi from "../../../axiosApi";
-import { isAxiosError } from "axios";
+import axios, { isAxiosError } from "axios";
+import { GEONAMES_USERNAME } from "../../../constants";
 
 export const fetchTrips = createAsyncThunk<Trip[]>(
   "trips/fetchAll",
@@ -61,5 +62,18 @@ export const deleteTrip = createAsyncThunk<void, string>(
       }
       throw (e);
     }
+  }
+);
+
+export const fetchCoordinatesOfCities = createAsyncThunk<Coordinates, string>(
+  'trips/getCoordinates',
+  async (cityName) => {
+    const response = await axios.get(`http://api.geonames.org/searchJSON?q=${cityName}&maxRows=1&username=${GEONAMES_USERNAME}`);
+    const lng = response.data.geonames[0].lng;
+    const lat = response.data.geonames[0].lat;
+    return {
+      lng: lng,
+      lat: lat
+    };
   }
 );

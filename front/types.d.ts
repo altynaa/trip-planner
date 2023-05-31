@@ -80,3 +80,8 @@ export interface TripData {
   finishesAt: Date | null;
   flightBooking: File | null;
 }
+
+export interface Coordinates {
+  lng: number;
+  lat: number;
+}

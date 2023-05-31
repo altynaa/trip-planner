@@ -37,7 +37,7 @@ const UsersMenu = () => {
         className="main-nav_list"
       >
         <MenuItem onClick={() => router.push('trips/myTrips')} className="main-nav_item">My Trips</MenuItem>
-        <MenuItem onClick={() => router.push('/myDocuments')}>My Documents</MenuItem>
+        <MenuItem onClick={() => router.push('/trips/newTrip')}>New Trip</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </>
