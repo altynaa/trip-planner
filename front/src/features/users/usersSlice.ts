@@ -27,7 +27,6 @@ const usersSlice = createSlice({
   reducers: {
     switchModalWindow: (state) => {
       state.modalWindowStatus = !state.modalWindowStatus;
-      console.log('clicked');
       state.loginError = null;
     },
     unsetUser: (state) => {

@@ -7,6 +7,8 @@ import { Provider } from "react-redux";
 import store, { persistor } from "@/app/store";
 import { GOOGLE_CLIENT_ID } from "../../constants";
 import { addInterceptors } from "../../axiosApi";
+import { ThemeProvider } from "@mui/material";
+import theme from "../../theme";
 
 addInterceptors(store);
 
@@ -15,9 +17,12 @@ export default function App({ Component, pageProps }: AppProps) {
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <ThemeProvider theme={theme}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ThemeProvider>
+
         </PersistGate>
       </Provider>
     </GoogleOAuthProvider>
