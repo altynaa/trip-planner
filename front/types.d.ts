@@ -82,6 +82,7 @@ export interface TripData {
 }
 
 export interface Coordinates {
+  city: string;
   lng: number;
   lat: number;
 }

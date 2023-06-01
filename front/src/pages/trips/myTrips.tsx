@@ -39,9 +39,7 @@ const MyTrips = () => {
       <Grid container direction="column" spacing={2}>
         <Grid item container justifyContent="space-between" alignItems="center">
           <Grid item>
-            <Typography variant="h4">
-              Your trips
-            </Typography>
+            <Typography variant="h4"> Your trips </Typography>
           </Grid>
         </Grid>
         {tripsLoading ?

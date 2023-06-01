@@ -24,7 +24,9 @@ const TripForm = () => {
 
   useEffect(() => {
     dispatch(fetchCountriesAndCities());
-    dispatch(fetchCoordinatesOfCities(trips[lastTrip].city));
+    if (trips[lastTrip].city !== "") {
+      dispatch(fetchCoordinatesOfCities(trips[lastTrip].city));
+    }
   }, [dispatch, trips, lastTrip]);
 
 
@@ -59,7 +61,6 @@ const TripForm = () => {
     }));
   };
 
-
   const handleAddRow = () => {
     setTrips(prevTrips => [...prevTrips, { country: "", city: "" }]);
   };
@@ -75,7 +76,6 @@ const TripForm = () => {
       });
     }
   };
-
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -160,7 +160,7 @@ const TripForm = () => {
                       if (obj.country === trip.country) {
                         return obj.cities.map(city => (
                           <option
-                            key={Math.random()}
+                            key={crypto.randomUUID()}
                             value={city}>
                             {city}
                           </option>
@@ -189,7 +189,6 @@ const TripForm = () => {
               label="Flight Booking"
             />
           </Grid>
-
           <Grid item xs={12}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
