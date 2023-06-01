@@ -4,8 +4,7 @@ const Home: React.FC<PropsWithChildren> = ({children}) => {
 
   return (
     <>
-      <main>
-      </main>
+      <main className="main-block"/>
       {children}
     </>
   )

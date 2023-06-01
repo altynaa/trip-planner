@@ -7,9 +7,9 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       <AppToolBar />
-      <Container maxWidth="xl">
+      {/*<Container maxWidth="xl">*/}
         {children}
-      </Container>
+      {/*</Container>*/}
     </>
   );
 };

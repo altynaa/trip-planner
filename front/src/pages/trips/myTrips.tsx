@@ -5,7 +5,7 @@ import { selectTripDeleting, selectTrips, selectTripsLoading } from "@/features/
 import { selectUser } from "@/features/users/usersSlice";
 import {
   Box, Button,
-  CircularProgress,
+  CircularProgress, Container,
   Grid,
   Paper,
   Table, TableBody, TableCell,
@@ -28,7 +28,6 @@ const MyTrips = () => {
     dispatch(fetchTrips());
   }, [dispatch]);
 
-  console.log(trips);
 
   const handleDelete = async (tripId: string) => {
     await dispatch(deleteTrip(tripId));
@@ -36,73 +35,76 @@ const MyTrips = () => {
   };
 
   return (
-    <Grid container direction="column" spacing={2}>
-      <Grid item container justifyContent="space-between" alignItems="center">
-        <Grid item>
-          <Typography variant="h4">
-            Your trips
-          </Typography>
+    <Container maxWidth="xl">
+      <Grid container direction="column" spacing={2}>
+        <Grid item container justifyContent="space-between" alignItems="center">
+          <Grid item>
+            <Typography variant="h4">
+              Your trips
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
-      {tripsLoading ?
-        <Box sx={{display: 'flex'}}> <CircularProgress/> </Box>
-        :
-        <Grid item container spacing={2}>
-          <TableContainer component={Paper}>
-            <Table sx={{minWidth: 650}} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="left">Itinerary</TableCell>
-                  <TableCell align="left">Start Date</TableCell>
-                  <TableCell align="left">End Date</TableCell>
-                  <TableCell align="left">Flight Booking</TableCell>
-                  {user && <TableCell align="center">Delete</TableCell>}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {trips.map((trip) => (
-                  <TableRow
-                    key={trip.id}
-                    sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                  >
-                    <TableCell align="left">
-                      {trip.itinerary.map((point) => (
-                        <>
-                          <Typography>Country: {point.country}</Typography>
-                          <Typography>City: {point.city}</Typography>
-                        </>
-                      ))}
-                    </TableCell>
-                    <TableCell align="left">{dayjs(trip.startsAt.toString()).format("DD.MM.YYYY")}</TableCell>
-                    <TableCell align="left">{dayjs(trip.finishesAt.toString()).format("DD.MM.YYYY")}</TableCell>
-                    <TableCell align="left">
-                      {trip.flightBooking && (
-                        <a href={trip.flightBooking} download>
-                          Download File
-                        </a>
-                      )}
-                    </TableCell>
-                    {user &&
-                      <TableCell align="center">
-                        <Button variant="contained"
-                                onClick={() => handleDelete(trip.id.toString())}
-                                disabled={deleting}
-                        >
-                          {deleting ?
-                            <Box sx={{display: "flex"}}>
-                              <CircularProgress/>
-                            </Box> : <DeleteIcon/>
-                          }
-                        </Button>
-                      </TableCell>
-                    }
+        {tripsLoading ?
+          <Box sx={{display: 'flex'}}> <CircularProgress/> </Box>
+          :
+          <Grid item container spacing={2}>
+            <TableContainer component={Paper}>
+              <Table sx={{minWidth: 650}} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="left">Itinerary</TableCell>
+                    <TableCell align="left">Start Date</TableCell>
+                    <TableCell align="left">End Date</TableCell>
+                    <TableCell align="left">Flight Booking</TableCell>
+                    {user && <TableCell align="center">Delete</TableCell>}
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>}
-    </Grid>
+                </TableHead>
+                <TableBody>
+                  {trips.map((trip) => (
+                    <TableRow
+                      key={trip.id}
+                      sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                    >
+                      <TableCell align="left">
+                        {trip.itinerary.map((point) => (
+                          <>
+                            <Typography>Country: {point.country}</Typography>
+                            <Typography>City: {point.city}</Typography>
+                          </>
+                        ))}
+                      </TableCell>
+                      <TableCell align="left">{dayjs(trip.startsAt.toString()).format("DD.MM.YYYY")}</TableCell>
+                      <TableCell align="left">{dayjs(trip.finishesAt.toString()).format("DD.MM.YYYY")}</TableCell>
+                      <TableCell align="left">
+                        {trip.flightBooking && (
+                          <a href={trip.flightBooking} download>
+                            Download File
+                          </a>
+                        )}
+                      </TableCell>
+                      {user &&
+                        <TableCell align="center">
+                          <Button variant="contained"
+                                  onClick={() => handleDelete(trip.id.toString())}
+                                  disabled={deleting}
+                          >
+                            {deleting ?
+                              <Box sx={{display: "flex"}}>
+                                <CircularProgress/>
+                              </Box> : <DeleteIcon/>
+                            }
+                          </Button>
+                        </TableCell>
+                      }
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>}
+      </Grid>
+    </Container>
+
   );
 };
 

@@ -3,6 +3,7 @@
 @use "partials/login";
 @use "partials/register";
 @use "partials/map";
+@use "partials/landing";
 
 :root {
   --max-width: 1100px;
@@ -93,7 +94,7 @@ body {
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: #F5F5F5
+  background: #FFFF
 }
 
 a {

@@ -128,7 +128,7 @@ const TripForm = () => {
                     <option disabled value="">Choose country</option>
                     {countriesAndCities.map(obj => (
                       <option
-                        key={Math.random()}
+                        key={crypto.randomUUID()}
                         value={obj.country}>
                         {obj.country}
                       </option>
