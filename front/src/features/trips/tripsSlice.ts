@@ -1,5 +1,5 @@
-import { Coordinates, Trip, ValidationError } from "../../../types";
-import { createSlice } from "@reduxjs/toolkit";
+import { Coordinates, Destination, Trip, ValidationError } from "../../../types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { addTrip, deleteTrip, fetchCoordinatesOfCities, fetchTrips } from "@/features/trips/tripsThunks";
 import { RootState } from "@/app/store";
 
@@ -26,7 +26,20 @@ const initialState: TripsState = {
 const tripsSlice = createSlice({
   name: 'trips',
   initialState,
-  reducers: {},
+  reducers: {
+    deleteCoordinates: (state, action: PayloadAction<{ trips: Destination[] }>) => {
+      const { trips } = action.payload;
+      const { coordinates } = state;
+      const newCoordinates = coordinates.filter(coordinate => {
+        return trips.some(trip => trip.city === coordinate.city);
+      });
+      return {
+        ...state,
+        coordinates: newCoordinates,
+      };
+
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchTrips.pending, (state) => {
       state.tripsLoading = true;
@@ -67,6 +80,9 @@ const tripsSlice = createSlice({
     });
     builder.addCase(fetchCoordinatesOfCities.fulfilled, (state, {payload: coordinates}) => {
       state.coordinatesLoading = false;
+      if (2 > 3 ) {
+
+      }
       state.coordinates = [...state.coordinates, coordinates];
     });
     builder.addCase(fetchCoordinatesOfCities.rejected, (state) => {
@@ -74,8 +90,8 @@ const tripsSlice = createSlice({
     });
   }
 });
-
 export const tripsReducer = tripsSlice.reducer;
+export const { deleteCoordinates }  = tripsSlice.actions;
 
 export const selectTripAdding = (state: RootState) => state.trips.tripAdding;
 export const selectTrips = (state: RootState) => state.trips.trips;

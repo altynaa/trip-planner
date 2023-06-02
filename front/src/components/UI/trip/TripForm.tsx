@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { selectCountriesAndCities } from "@/features/countries/countriesSlice";
 import { fetchCountriesAndCities } from "@/features/countries/countriesThunks";
 import { addTrip, fetchCoordinatesOfCities } from "@/features/trips/tripsThunks";
-import { selectTripAdding } from "@/features/trips/tripsSlice";
+import { deleteCoordinates, selectCoordinates, selectTripAdding } from "@/features/trips/tripsSlice";
 import FileInput from "@/components/UI/fileInput/FileInput";
 import { Destination, TripData } from "../../../../types";
 import { Grid, Typography, Button, CircularProgress } from "@mui/material";
@@ -14,20 +14,38 @@ const TripForm = () => {
   const dispatch = useAppDispatch();
   const countriesAndCities = useAppSelector(selectCountriesAndCities);
   const adding = useAppSelector(selectTripAdding);
+  const coordinates = useAppSelector(selectCoordinates);
   const [trips, setTrips] = useState<Destination[]>([{ country: "", city: "" }]);
-  const lastTrip = trips.length - 1;
+  const [prevTripsLength, setPrevTripsLength] = useState<number>(trips.length);
   const [tripData, setTripData] = useState<TripData>({
     startsAt: null,
     finishesAt: null,
     flightBooking: null
   });
 
+
   useEffect(() => {
     dispatch(fetchCountriesAndCities());
-    if (trips[lastTrip].city !== "") {
-      dispatch(fetchCoordinatesOfCities(trips[lastTrip].city));
+    if (trips.length > prevTripsLength && trips[trips.length - 1].city !== "") {
+        dispatch(fetchCoordinatesOfCities(trips[trips.length - 1].city));
+    } else if (trips.length === prevTripsLength && trips[trips.length - 1].city !== "") {
+      const cityExistsInCoordinates = coordinates.some(
+        (coord) => coord.city === trips[trips.length - 1].city
+      );
+      if (!cityExistsInCoordinates) {
+        dispatch(fetchCoordinatesOfCities(trips[trips.length - 1].city));
+      }
+    } else {
+      return;
     }
-  }, [dispatch, trips, lastTrip]);
+  }, [dispatch, trips, coordinates, prevTripsLength]);
+
+  useEffect(() => {
+    if (trips.length <= prevTripsLength) {
+      dispatch(deleteCoordinates({ trips }));
+    }
+    setPrevTripsLength(trips.length);
+  }, [dispatch, trips, prevTripsLength]);
 
 
   const inputChangeHandler = async (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -74,6 +92,7 @@ const TripForm = () => {
         updatedTrips.splice(index, 1);
         return updatedTrips;
       });
+
     }
   };
 
