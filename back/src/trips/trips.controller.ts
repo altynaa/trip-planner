@@ -5,6 +5,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  Patch,
   Post,
   UploadedFile,
   UseGuards,
@@ -18,6 +19,7 @@ import { TokenAuthGuard } from '../auth/token-auth.guard';
 import { CurrentUser } from '../auth/currentUser.decorator';
 import { User } from '../entities/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UpdateTripDto } from './dto/updateTrip.dto';
 
 @Controller('trips')
 export class TripsController {
@@ -47,7 +49,7 @@ export class TripsController {
   }
 
   @Get()
-  @UseGuards(TokenAuthGuard)
+  // @UseGuards(TokenAuthGuard)
   async getAll(@CurrentUser() user: User) {
     const userId = user.id;
     const trips = await this.tripRepository
@@ -66,6 +68,22 @@ export class TripsController {
     }));
   }
 
+  @Patch(':id')
+  @UseGuards(TokenAuthGuard)
+  async updateTrip(@Param('id') id: number, @Body() body: UpdateTripDto) {
+    const trip = await this.tripRepository.findOne({
+      where: { id: id },
+    });
+    if (trip) {
+      trip.itinerary = body.itinerary;
+      trip.startsAt = body.startsAt;
+      trip.finishesAt = body.finishesAt;
+      return this.tripRepository.save(trip);
+    } else {
+      throw new NotFoundException(`Trip with id ${id} not found`);
+    }
+  }
+
   @Delete(':id')
   @UseGuards(TokenAuthGuard)
   async removeTrip(@Param('id') id: number) {
@@ -78,5 +96,13 @@ export class TripsController {
     } else {
       throw new NotFoundException(`Trip with id ${id} not found`);
     }
+  }
+
+  @Get(':id')
+  @UseGuards(TokenAuthGuard)
+  async getOneTrip(@Param('id') id: number) {
+    return this.tripRepository.findOne({
+      where: { id: id },
+    });
   }
 }
