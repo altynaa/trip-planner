@@ -7,12 +7,9 @@ import {
     Typography
 } from "@mui/material";
 
-
-
 const ImageCardMedia = styled(CardMedia)({
     height: 200,
 });
-
 
 const PromoBlock = () => {
     const promoItems = [
@@ -24,7 +21,7 @@ const PromoBlock = () => {
 
     return (
         <Container maxWidth="xl">
-            <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Box display="flex" alignItems="center" justifyContent="center" marginBottom={2}>
                 <Typography> Choose your destination with BonVoyage </Typography>
             </Box>
             <Grid container spacing={4}>

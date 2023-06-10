@@ -5,7 +5,7 @@ import Map from "@/components/Map";
 
 const NewTrip = () => {
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" style={{marginTop: 25}}>
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <TripForm/>

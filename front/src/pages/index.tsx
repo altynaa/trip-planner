@@ -6,9 +6,7 @@ const Home: React.FC<PropsWithChildren> = ({children}) => {
 
     return (
         <>
-            <main className="main-block">
-                Blocks with articles
-            </main>
+            <main className="main-block"/>
             <PromoBlock/>
             {children}
         </>

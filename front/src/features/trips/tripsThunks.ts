@@ -68,7 +68,6 @@ export const deleteTrip = createAsyncThunk<void, string>(
 export const fetchCoordinatesOfCities = createAsyncThunk<Coordinates, string>(
   'trips/getCoordinates',
   async (cityName) => {
-    console.log(cityName, 'thunk');
     const response = await axios.get(`http://api.geonames.org/searchJSON?q=${cityName}&maxRows=1&username=${GEONAMES_USERNAME}`);
     const lng = response.data.geonames[0].lng;
     const lat = response.data.geonames[0].lat;
