@@ -1,5 +1,5 @@
 import React from "react";
-import TripForm from "@/components/UI/trip/TripForm";
+import TripForm from "@/components/UI/Trip/TripForm";
 import { Container, Grid } from "@mui/material";
 import Map from "@/components/Map";
 

@@ -4,14 +4,16 @@ import { selectCountriesAndCities } from "@/features/countries/countriesSlice";
 import { fetchCountriesAndCities } from "@/features/countries/countriesThunks";
 import { addTrip, fetchCoordinatesOfCities } from "@/features/trips/tripsThunks";
 import { deleteCoordinates, selectCoordinates, selectTripAdding } from "@/features/trips/tripsSlice";
-import FileInput from "@/components/UI/fileInput/FileInput";
+import FileInput from '@/components/UI/FileInput/FileInput';
 import { Destination, TripData } from "../../../../types";
 import { Grid, Typography, Button, CircularProgress } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { useRouter } from "next/router";
 
 const TripForm = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const countriesAndCities = useAppSelector(selectCountriesAndCities);
   const adding = useAppSelector(selectTripAdding);
   const coordinates = useAppSelector(selectCoordinates);
@@ -22,6 +24,24 @@ const TripForm = () => {
     finishesAt: null,
     flightBooking: null
   });
+
+  // useEffect(() => {
+  //   dispatch(fetchCountriesAndCities());
+  //
+  //   const lastTrip = trips[trips.length - 1];
+  //   const lastTripCity = lastTrip.city;
+  //
+  //   const isNewTrip = trips.length > prevTripsLength;
+  //   const cityExistsInCoordinates = coordinates.some((coord) => coord.city === lastTripCity);
+  //
+  //   if (lastTripCity !== "") {
+  //     if (isNewTrip || (!isNewTrip && !cityExistsInCoordinates)) {
+  //       dispatch(fetchCoordinatesOfCities(lastTripCity));
+  //     }
+  //   }
+  //
+  // }, [dispatch, trips, coordinates, prevTripsLength]);
+
 
 
   useEffect(() => {
@@ -105,6 +125,7 @@ const TripForm = () => {
       flightBooking: tripData.flightBooking
     };
     await dispatch(addTrip(trip));
+    await router.push('/trips/myTrips');
     setTrips([{ country: "", city: "" }]);
   };
 

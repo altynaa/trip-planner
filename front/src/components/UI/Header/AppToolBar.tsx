@@ -2,8 +2,8 @@ import React from "react";
 import Link from "next/link";
 import { useAppSelector } from "@/app/hooks";
 import { selectUser } from "@/features/users/usersSlice";
-import UsersMenu from "@/components/UI/header/UsersMenu";
-import AnonymousMenu from "@/components/UI/header/AnonymousMenu";
+import UsersMenu from "@/components/UI/Header/UsersMenu";
+import AnonymousMenu from "@/components/UI/Header/AnonymousMenu";
 
 const AppToolBar = () => {
   const user = useAppSelector(selectUser);

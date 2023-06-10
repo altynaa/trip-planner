@@ -80,9 +80,6 @@ const tripsSlice = createSlice({
     });
     builder.addCase(fetchCoordinatesOfCities.fulfilled, (state, {payload: coordinates}) => {
       state.coordinatesLoading = false;
-      if (2 > 3 ) {
-
-      }
       state.coordinates = [...state.coordinates, coordinates];
     });
     builder.addCase(fetchCoordinatesOfCities.rejected, (state) => {

@@ -64,21 +64,21 @@ const MyTrips = () => {
                       sx={{'&:last-child td, &:last-child th': {border: 0}}}
                     >
                       <TableCell align="left">
-                        {trip.itinerary.map((point) => (
-                          <>
+                        {trip.itinerary.map((point, index) => (
+                          <div key={index}>
                             <Typography>Country: {point.country}</Typography>
                             <Typography>City: {point.city}</Typography>
-                          </>
+                          </div>
                         ))}
                       </TableCell>
                       <TableCell align="left">{dayjs(trip.startsAt.toString()).format("DD.MM.YYYY")}</TableCell>
                       <TableCell align="left">{dayjs(trip.finishesAt.toString()).format("DD.MM.YYYY")}</TableCell>
                       <TableCell align="left">
-                        {trip.flightBooking && (
+                        {trip.flightBooking ? (
                           <a href={trip.flightBooking} download>
                             Download File
                           </a>
-                        )}
+                        ) : <Typography>No file</Typography>}
                       </TableCell>
                       {user &&
                         <TableCell align="center">

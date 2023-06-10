@@ -31,7 +31,7 @@ export class TripsController {
   @Post()
   @UseGuards(TokenAuthGuard)
   @UseInterceptors(
-    FileInterceptor('flightBooking', { dest: './public/uploads/trip/file' }),
+    FileInterceptor('flightBooking', { dest: './public/uploads/Trip/file' }),
   )
   async createTrip(
     @UploadedFile() file: Express.Multer.File,
@@ -43,19 +43,19 @@ export class TripsController {
       itinerary: body.itinerary,
       startsAt: body.startsAt,
       finishesAt: body.finishesAt,
-      flightBooking: file ? '/uploads/trip/file/' + file.filename : null,
+      flightBooking: file ? '/uploads/Trip/file/' + file.filename : null,
     });
     return this.tripRepository.save(trip);
   }
 
   @Get()
-  // @UseGuards(TokenAuthGuard)
+  @UseGuards(TokenAuthGuard)
   async getAll(@CurrentUser() user: User) {
     const userId = user.id;
     const trips = await this.tripRepository
-      .createQueryBuilder('trip')
-      .leftJoinAndSelect('trip.tourist', 'tourist')
-      .select(['trip', 'tourist.id', 'tourist.firstName', 'tourist.lastName'])
+      .createQueryBuilder('Trip')
+      .leftJoinAndSelect('Trip.tourist', 'tourist')
+      .select(['Trip', 'tourist.id', 'tourist.firstName', 'tourist.lastName'])
       .where('tourist = :userId', { userId })
       .getMany();
 
@@ -96,13 +96,5 @@ export class TripsController {
     } else {
       throw new NotFoundException(`Trip with id ${id} not found`);
     }
-  }
-
-  @Get(':id')
-  @UseGuards(TokenAuthGuard)
-  async getOneTrip(@Param('id') id: number) {
-    return this.tripRepository.findOne({
-      where: { id: id },
-    });
   }
 }
